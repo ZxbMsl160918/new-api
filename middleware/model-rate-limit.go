@@ -10,6 +10,7 @@ import (
 	"github.com/QuantumNous/new-api/common"
 	"github.com/QuantumNous/new-api/common/limiter"
 	"github.com/QuantumNous/new-api/constant"
+	"github.com/QuantumNous/new-api/model"
 	"github.com/QuantumNous/new-api/setting"
 
 	"github.com/gin-gonic/gin"
@@ -184,11 +185,25 @@ func ModelRequestRateLimit() func(c *gin.Context) {
 			group = common.GetContextKeyString(c, constant.ContextKeyUserGroup)
 		}
 
-		//获取分组的限流配置
+		// 获取分组的限流配置
 		groupTotalCount, groupSuccessCount, found := setting.GetGroupRateLimit(group)
 		if found {
 			totalMaxCount = groupTotalCount
 			successMaxCount = groupSuccessCount
+		}
+
+		// 优先使用用户个人限流配置（如果设置了的话）
+		userId := c.GetInt("id")
+		if userId > 0 {
+			userTotal, userSuccess, userFound := model.GetUserRateLimit(userId)
+			if userFound {
+				if userTotal > 0 {
+					totalMaxCount = userTotal
+				}
+				if userSuccess > 0 {
+					successMaxCount = userSuccess
+				}
+			}
 		}
 
 		// 根据存储类型选择并执行限流处理器
