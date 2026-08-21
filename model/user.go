@@ -106,6 +106,10 @@ type User struct {
 	Setting          string                     `json:"setting" gorm:"type:text;column:setting"`
 	Remark           string                     `json:"remark,omitempty" gorm:"type:varchar(255)" validate:"max=255"`
 	StripeCustomer   string                     `json:"stripe_customer" gorm:"type:varchar(64);column:stripe_customer;index"`
+	// RateLimitTotal: per-user total requests per minute. 0 means follow group setting.
+	RateLimitTotal int `json:"rate_limit_total" gorm:"type:int;default:0;column:rate_limit_total"`
+	// RateLimitSuccess: per-user successful requests per minute. 0 means follow group setting.
+	RateLimitSuccess int                        `json:"rate_limit_success" gorm:"type:int;default:0;column:rate_limit_success"`
 	CreatedAt        int64                      `json:"created_at" gorm:"autoCreateTime;column:created_at"`
 	LastLoginAt      int64                      `json:"last_login_at" gorm:"default:0;column:last_login_at"`
 	AuthVersion      int64                      `json:"-" gorm:"type:bigint;not null;default:1;column:auth_version"`
@@ -212,6 +216,27 @@ func UpdateUserBindColumn(userId int, column string, value string) error {
 		return fmt.Errorf("invalid user bind column: %s", column)
 	}
 	return DB.Model(&User{}).Where("id = ?", userId).Update(column, value).Error
+}
+
+// GetUserRateLimit returns the per-user rate limit settings.
+// Returns (total, success, true) if the user has personal limits set (any > 0),
+// otherwise (0, 0, false) meaning follow group config.
+func GetUserRateLimit(userId int) (total int, success int, found bool) {
+	if userId <= 0 {
+		return 0, 0, false
+	}
+	var u struct {
+		RateLimitTotal   int
+		RateLimitSuccess int
+	}
+	err := DB.Model(&User{}).Select("rate_limit_total", "rate_limit_success").Where("id = ?", userId).First(&u).Error
+	if err != nil {
+		return 0, 0, false
+	}
+	if u.RateLimitTotal > 0 || u.RateLimitSuccess > 0 {
+		return u.RateLimitTotal, u.RateLimitSuccess, true
+	}
+	return 0, 0, false
 }
 
 // 根据用户角色生成默认的边栏配置
@@ -838,10 +863,12 @@ func (user *User) EditWithTx(tx *gorm.DB, updatePassword bool) error {
 
 	newUser := *user
 	updates := map[string]interface{}{
-		"username":     newUser.Username,
-		"display_name": newUser.DisplayName,
-		"group":        newUser.Group,
-		"remark":       newUser.Remark,
+		"username":           newUser.Username,
+		"display_name":       newUser.DisplayName,
+		"group":              newUser.Group,
+		"remark":             newUser.Remark,
+		"rate_limit_total":   newUser.RateLimitTotal,
+		"rate_limit_success": newUser.RateLimitSuccess,
 	}
 	if updatePassword {
 		updates["password"] = newUser.Password
