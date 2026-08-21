@@ -391,6 +391,72 @@ export function UsersMutateDrawer({
 
                   <FormField
                     control={form.control}
+                    name='rate_limit_total'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('Rate Limit Total (RPM)')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            type='number'
+                            min={0}
+                            value={field.value ?? 0}
+                            onChange={(e) => {
+                              const v = e.target.value
+                              field.onChange(
+                                v === '' ? 0 : Math.max(0, parseInt(v, 10) || 0)
+                              )
+                            }}
+                            onBlur={field.onBlur}
+                            name={field.name}
+                            ref={field.ref}
+                            placeholder='0'
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          {t(
+                            'Total requests per minute. 0 means follow group setting.'
+                          )}
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name='rate_limit_success'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('Rate Limit Success (RPM)')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            type='number'
+                            min={0}
+                            value={field.value ?? 0}
+                            onChange={(e) => {
+                              const v = e.target.value
+                              field.onChange(
+                                v === '' ? 0 : Math.max(0, parseInt(v, 10) || 0)
+                              )
+                            }}
+                            onBlur={field.onBlur}
+                            name={field.name}
+                            ref={field.ref}
+                            placeholder='0'
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          {t(
+                            'Successful requests per minute. 0 means follow group setting.'
+                          )}
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
                     name='quota_dollars'
                     render={({ field }) => (
                       <FormItem>
