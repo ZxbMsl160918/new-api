@@ -11,19 +11,22 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const userCacheSchemaVersion = 2
+// Bumped to 3: added RateLimitTotal / RateLimitSuccess fields.
+const userCacheSchemaVersion = 3
 
 type UserBase struct {
-	Id          int    `json:"id"`
-	Group       string `json:"group"`
-	Email       string `json:"email"`
-	Quota       int    `json:"quota"`
-	Status      int    `json:"status"`
-	Role        int    `json:"role"`
-	Username    string `json:"username"`
-	Setting     string `json:"setting"`
-	AuthVersion int64  `json:"-"`
-	CacheSchema int    `json:"-"`
+	Id               int    `json:"id"`
+	Group            string `json:"group"`
+	Email            string `json:"email"`
+	Quota            int    `json:"quota"`
+	Status           int    `json:"status"`
+	Role             int    `json:"role"`
+	Username         string `json:"username"`
+	Setting          string `json:"setting"`
+	RateLimitTotal   int    `json:"rate_limit_total"`
+	RateLimitSuccess int    `json:"rate_limit_success"`
+	AuthVersion      int64  `json:"-"`
+	CacheSchema      int    `json:"-"`
 }
 
 func (user *UserBase) WriteContext(c *gin.Context) {
