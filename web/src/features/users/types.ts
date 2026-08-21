@@ -59,6 +59,9 @@ export const userSchema = z.object({
   last_login_at: z.number().optional(),
   DeletedAt: z.any().nullable().optional(),
   remark: z.string().optional(),
+  // Per-user rate limit override (0 = follow group setting)
+  rate_limit_total: z.number().optional(),
+  rate_limit_success: z.number().optional(),
   admin_permissions: z
     .record(z.string(), z.record(z.string(), z.boolean()))
     .optional(),
@@ -125,6 +128,8 @@ export interface UserFormData {
   quota?: number // Only used when updating user
   group?: string // Only used when updating user
   remark?: string // Only used when updating user
+  rate_limit_total?: number // Per-user total RPM override (0 = follow group)
+  rate_limit_success?: number // Per-user success RPM override (0 = follow group)
   admin_permissions?: AdminPermissionMatrix
 }
 
