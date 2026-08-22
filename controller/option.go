@@ -254,6 +254,15 @@ func UpdateOption(c *gin.Context) {
 			})
 			return
 		}
+	case "context_limit.model_context_limits":
+		err = model_setting.ValidateModelContextLimits(option.Value.(string))
+		if err != nil {
+			c.JSON(http.StatusOK, gin.H{
+				"success": false,
+				"message": err.Error(),
+			})
+			return
+		}
 	case operation_setting.ToolPriceOptionKey:
 		err = operation_setting.ValidateToolPricesJSON(option.Value.(string))
 		if err != nil {

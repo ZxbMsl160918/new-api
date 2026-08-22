@@ -24,6 +24,7 @@ import (
 	"github.com/QuantumNous/new-api/relaykit/types"
 	"github.com/QuantumNous/new-api/service"
 	"github.com/QuantumNous/new-api/setting"
+	"github.com/QuantumNous/new-api/setting/model_setting"
 	"github.com/QuantumNous/new-api/setting/operation_setting"
 
 	"github.com/bytedance/gopkg/util/gopool"
@@ -152,6 +153,23 @@ func Relay(c *gin.Context, relayFormat types.RelayFormat) {
 	}
 
 	relayInfo.SetEstimatePromptTokens(tokens)
+
+	if limit, limited := model_setting.GetModelContextLimit(relayInfo.OriginModelName); limited {
+		requestMaxTokens := 0
+		if meta != nil {
+			requestMaxTokens = meta.MaxTokens
+		}
+		total := tokens + requestMaxTokens
+		if total > limit {
+			logger.LogWarn(c, fmt.Sprintf("model context limit exceeded: model %s, estimated %d tokens (input %d + max_tokens %d), limit %d, user %d",
+				relayInfo.OriginModelName, total, tokens, requestMaxTokens, limit, relayInfo.UserId))
+			newAPIError = types.NewErrorWithStatusCode(
+				fmt.Errorf("当前模型 %s 的上下文窗口限制为 %d tokens，本次请求约 %d tokens（输入约 %d + max_tokens %d），请缩短输入或减小 max_tokens",
+					relayInfo.OriginModelName, limit, total, tokens, requestMaxTokens),
+				types.ErrorCodeInvalidRequest, http.StatusBadRequest, types.ErrOptionWithSkipRetry())
+			return
+		}
+	}
 
 	priceData, err := helper.ModelPriceHelper(c, relayInfo, tokens, meta)
 	if err != nil {

@@ -345,6 +345,7 @@ export function ModelMutateDrawer({
       'channel_affinity_setting.rules': '[]',
       'model_deployment.ionet.api_key': '',
       'model_deployment.ionet.enabled': false,
+      'context_limit.model_context_limits': '{}',
     }
     return getOptionValue(systemOptionsData.data, defaultModelSettings)
   }, [systemOptionsData])

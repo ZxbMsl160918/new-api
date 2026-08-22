@@ -21,6 +21,7 @@ import { IoNetDeploymentSettingsSection } from '../integrations/ionet-deployment
 import type { ModelSettings } from '../types'
 import { createSectionRegistry } from '../utils/section-registry'
 import { ClaudeSettingsCard } from './claude-settings-card'
+import { ContextLimitCard } from './context-limit-card'
 import { GeminiSettingsCard } from './gemini-settings-card'
 import { GlobalSettingsCard } from './global-settings-card'
 import { GrokSettingsCard } from './grok-settings-card'
@@ -128,6 +129,23 @@ const MODELS_SECTIONS = [
               settings['claude.thinking_adapter_enabled'],
             thinking_adapter_budget_tokens_percentage:
               settings['claude.thinking_adapter_budget_tokens_percentage'],
+          },
+        }}
+      />
+    ),
+  },
+  {
+    id: 'context-limit',
+    titleKey: 'Context Limits',
+    build: (settings: ModelSettings) => (
+      <ContextLimitCard
+        defaultValues={{
+          context_limit: {
+            model_context_limits:
+              settings['context_limit.model_context_limits'] &&
+              settings['context_limit.model_context_limits'] !== 'null'
+                ? settings['context_limit.model_context_limits']
+                : '{}',
           },
         }}
       />
