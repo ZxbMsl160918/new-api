@@ -3509,6 +3509,7 @@
     "Per-feature metered windows split by model or capability.": "Окна с поминутной тарификацией по фиче, в разбивке по модели или возможностям.",
     "Per-group performance": "Производительность по группам",
     "Per-model context window limits in tokens. Requests whose estimated input tokens plus max_tokens exceed the limit are rejected with 400. Models not listed are unlimited.": "Ограничения окна контекста для каждой модели в токенах. Запросы, у которых сумма оценённых входных токенов и max_tokens превышает лимит, отклоняются с кодом 400. Модели, не указанные в списке, не ограничены.",
+    "Set per-model context window limits in tokens. Requests whose estimated input tokens plus max_tokens exceed the limit are rejected with 400. Models not listed are unlimited. A trailing * matches model name prefixes; exact matches take priority, then the longest prefix.": "Задайте ограничения окна контекста для каждой модели в токенах. Запросы, у которых сумма оценённых входных токенов и max_tokens превышает лимит, отклоняются с кодом 400. Модели, отсутствующие в списке, не ограничены. Конечный * задаёт совпадение по префиксу имени модели; точное совпадение имеет приоритет, затем выбирается самый длинный префикс.",
     "Per-request": "За запрос",
     "Per-request (fixed price)": "За запрос (фиксированная цена)",
     "Per-token": "За токен",

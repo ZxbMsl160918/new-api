@@ -71,10 +71,22 @@ const schema = z.object({
         for (const [model, limit] of Object.entries(
           parsed as Record<string, unknown>
         )) {
-          if (!model || typeof limit !== 'number' || !Number.isFinite(limit) || limit <= 0 || !Number.isInteger(limit)) {
+          const wildcardCount = (model.match(/\*/g) ?? []).length
+          const invalidWildcard =
+            model === '*' ||
+            wildcardCount > 1 ||
+            (wildcardCount === 1 && !model.endsWith('*'))
+          if (
+            !model ||
+            invalidWildcard ||
+            typeof limit !== 'number' ||
+            !Number.isFinite(limit) ||
+            limit <= 0 ||
+            !Number.isInteger(limit)
+          ) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
-              message: `Invalid limit for model "${model}": must be a positive integer`,
+              message: `Invalid limit for model "${model}": use a positive integer and an optional trailing * wildcard`,
             })
             return
           }
@@ -181,10 +193,10 @@ export function ContextLimitCard({ defaultValues }: ContextLimitCardProps) {
                 </FormControl>
                 <FormDescription>
                   {t(
-                    'Per-model context window limits in tokens. Requests whose estimated input tokens plus max_tokens exceed the limit are rejected with 400. Models not listed are unlimited.'
+                    'Set per-model context window limits in tokens. Requests whose estimated input tokens plus max_tokens exceed the limit are rejected with 400. Models not listed are unlimited. A trailing * matches model name prefixes; exact matches take priority, then the longest prefix.'
                   )}{' '}
                   {t('Example')}{' '}
-                  {`{ "deepseek-v4-pro": 300000 }`}
+                  {`{ "deepseek-v4-pro": 300000, "gpt-5.6-luna*": 300000 }`}
                 </FormDescription>
                 <FormMessage />
               </FormItem>

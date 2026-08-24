@@ -3509,6 +3509,7 @@
     "Per-feature metered windows split by model or capability.": "Cửa sổ tính phí theo từng tính năng, tách theo mô hình hoặc năng lực.",
     "Per-group performance": "Hiệu năng theo nhóm",
     "Per-model context window limits in tokens. Requests whose estimated input tokens plus max_tokens exceed the limit are rejected with 400. Models not listed are unlimited.": "Giới hạn cửa sổ ngữ cảnh theo mô hình (tính bằng token). Yêu cầu có tổng token đầu vào ước tính cộng max_tokens vượt quá giới hạn sẽ bị từ chối với mã 400. Mô hình không có trong danh sách không bị giới hạn.",
+    "Set per-model context window limits in tokens. Requests whose estimated input tokens plus max_tokens exceed the limit are rejected with 400. Models not listed are unlimited. A trailing * matches model name prefixes; exact matches take priority, then the longest prefix.": "Đặt giới hạn cửa sổ ngữ cảnh theo từng mô hình (tính bằng token). Yêu cầu có tổng token đầu vào ước tính cộng max_tokens vượt quá giới hạn sẽ bị từ chối với mã 400. Mô hình không có trong danh sách không bị giới hạn. Dấu * ở cuối dùng để khớp tiền tố tên mô hình; khớp chính xác được ưu tiên, sau đó chọn tiền tố dài nhất.",
     "Per-request": "Theo yêu cầu",
     "Per-request (fixed price)": "Theo yêu cầu (giá cố định)",
     "Per-token": "Theo token",

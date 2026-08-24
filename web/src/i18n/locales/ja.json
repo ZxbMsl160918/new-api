@@ -3509,6 +3509,7 @@
     "Per-feature metered windows split by model or capability.": "機能ごとの従量制ウィンドウ。モデルまたは能力別に分かれます。",
     "Per-group performance": "グループ別パフォーマンス",
     "Per-model context window limits in tokens. Requests whose estimated input tokens plus max_tokens exceed the limit are rejected with 400. Models not listed are unlimited.": "モデルごとのコンテキストウィンドウ上限（トークン数）。推定入力トークンと max_tokens の合計が上限を超えるリクエストは 400 で拒否されます。リストにないモデルは無制限です。",
+    "Set per-model context window limits in tokens. Requests whose estimated input tokens plus max_tokens exceed the limit are rejected with 400. Models not listed are unlimited. A trailing * matches model name prefixes; exact matches take priority, then the longest prefix.": "モデルごとのコンテキストウィンドウ上限をトークン数で設定します。推定入力トークンと max_tokens の合計が上限を超えるリクエストは 400 で拒否されます。リストにないモデルは無制限です。末尾の * はモデル名の前方一致に使え、完全一致が優先され、その次に最長のプレフィックスが適用されます。",
     "Per-request": "リクエスト単位",
     "Per-request (fixed price)": "リクエストごと (固定価格)",
     "Per-token": "トークン単位",
